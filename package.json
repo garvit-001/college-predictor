@@ -1,0 +1,15 @@
+{
+  "name": "cp-practice",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "pdf-table-extractor": "^1.0.3",
+    "tesseract.js": "^4.0.6"
+  }
+}

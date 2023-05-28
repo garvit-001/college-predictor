@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>College List</title>
+    <style>
+        /* Table Styles */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        /* Results Container Styles */
+        #results {
+            margin-top: 20px;
+        }
+    </style>
+
+    <script>
+        var colleges; // Declare the colleges variable
+
+        function filterColleges() {
+            // Get the selected gender and category from the dropdown
+            var selectedGender = document.getElementById("gender").value;
+            var selectedCategory = document.getElementById("category").value;
+
+            // Filter colleges based on the selected gender and category
+            var filteredColleges = colleges.filter(function (college) {
+                return college.Gender === selectedGender && college.Quota === selectedCategory;
+            });
+
+            // Clear previous results
+            var resultsContainer = document.getElementById("results");
+            resultsContainer.innerHTML = "";
+
+            // Display the filtered colleges
+            filteredColleges.forEach(function (college) {
+                var collegeInfo = document.createElement("p");
+                collegeInfo.innerHTML = "<strong>Institute:</strong> " + college.Institute + "<br>"
+                    + "<strong>Program:</strong> " + college["Academic Program Name"] + "<br>"
+                    + "<strong>Opening Rank:</strong> " + college["Opening Rank"] + "<br>"
+                    + "<strong>Closing Rank:</strong> " + college["Closing Rank"] + "<br><br>";
+                resultsContainer.appendChild(collegeInfo);
+            });
+        }
+
+        // Fetch JSON data from the file
+        fetch('colleges.json')
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                // Assign the fetched data to the 'colleges' variable
+                colleges = data;
+
+                // Populate the dropdown options dynamically based on the data
+                var genderDropdown = document.getElementById("gender");
+                var categoryDropdown = document.getElementById("category");
+
+                // Extract unique values for gender and category from the colleges data
+                var genders = [...new Set(colleges.map(function (college) {
+                    return college.Gender;
+                }))];
+
+                var categories = [...new Set(colleges.map(function (college) {
+                    return college.Quota;
+                }))];
+
+                // Create and append option elements to the dropdowns
+                genders.forEach(function (gender) {
+                    var option = document.createElement("option");
+                    option.value = gender;
+                    option.text = gender;
+                    genderDropdown.appendChild(option);
+                });
+
+                categories.forEach(function (category) {
+                    var option = document.createElement("option");
+                    option.value = category;
+                    option.text = category;
+                    categoryDropdown.appendChild(option);
+                });
+            })
+            .catch(function (error) {
+                console.error('Error fetching JSON data:', error);
+            });
+    </script>
+</head>
+
+<body>
+    <h1>College List</h1>
+
+    <label for="gender">Select Gender:</label>
+    <select id="gender"></select>
+
+    <label for="category">Select Category:</label>
+    <select id="category"></select>
+
+    <button onclick="filterColleges()">Filter</button>
+
+    <div id="results"></div>
+</body>
+
+</html>
